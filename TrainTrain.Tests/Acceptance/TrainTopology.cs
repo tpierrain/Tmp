@@ -1,4 +1,4 @@
-﻿namespace TrainTrain.Test.Acceptance
+﻿namespace TrainTrain.Tests.Acceptance
 {
     public class TrainTopology
     {

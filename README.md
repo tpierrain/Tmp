@@ -45,12 +45,3 @@ En route :
 
  Suite à notre refactoring, on peut commencer à avoir des discussions intéressantes avec le métier sur un autre problème qui le taraude: la modification de la topologies des trains à postériori qui était problématique avant a cause du caching des trains du service TrainTrain.
 
-
-
-T-Shirts:
- - le client à toujours raison (bleu acier)
- - l'équipe du Train-Train (rose pétant)
-
-
-
- sklmk
