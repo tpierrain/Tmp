@@ -1,18 +1,16 @@
 # kata-LegacyTrain
 Kata on how to refactor a typical legacy code base (directly inspired by [Emily Bache's kata](https://github.com/emilybache/KataTrainReservation).
 
-Too many projects have layered-based...
-
-## Contexte: 
+## Contexte général
 SSII a gagné un appel d'offre pour mise en oeuvre rapide d'un logiciel de réservation de sièges dans les trains.
 Après avoir développé une première version de l'appli, la SSII a continuée a faire evoluer le système jusqu'à arriver à une situation de blocage: le client demande une modification de l'algoithme de reservation ce qui semble impossible à la SSII (qui plus est, à perdu entre-temps tous ses développeurs partis faire autre chose de plus intéressant). La SSII a depuis jetée l'éponge en produisant un avenant/devis hors de prix pour le client qui nous sollicite pour "reprendre le dossier".
 
 Nous arrivons donc sur une code base assez moche, pour laquelle nous n'avons plus aucun développeur pour nous expliquer leurs intentions initiales et justifier de leurs choix. 
 
-## Description de l'architecture
+## Description de l'architecture et des APIs exernes impliquées
 On a récupéré le diagramme suivant qui a l'air d'etre à jour et qu'on vous commente.
 
-<Montrer dessin.>
+Montrer dessin.
 
 Explication sur les 2 APIs de la HassanCehef qu'on est obligé de consommer : 
 ### L'API TrainDataService 
@@ -24,7 +22,8 @@ Explication sur les 2 APIs de la HassanCehef qu'on est obligé de consommer :
 
 ---
 
-## Contexte (avant de coder)
+## Instructions
+
 On vient de rajouter 3 tests d'acceptation sur les règles métiers évoquées.
 Should:
    - Reserve_seats_when_available()
