@@ -11,7 +11,6 @@ namespace TrainTrain
     {
         private const string UriBookingReferenceService = "https://localhost:7264/";
         private const string UriTrainDataService = "https://localhost:7177";
-        private readonly ITrainCaching _trainCaching;
         private readonly ITrainDataService _trainDataService;
         private readonly IBookingReferenceService _bookingReferenceService;
 
@@ -23,8 +22,6 @@ namespace TrainTrain
         {
             _trainDataService = trainDataService;
             _bookingReferenceService = bookingReferenceService;
-            _trainCaching = new TrainCaching();
-            _trainCaching.Clear();
         }
 
         public async Task<string> Reserve(string trainId, int seatsRequestedCount)
@@ -84,8 +81,6 @@ namespace TrainTrain
 
                 if (numberOfReserv == seatsRequestedCount)
                 {
-                    await _trainCaching.Save(trainId, trainInst, bookingRef);
-
                     await _trainDataService.Reserve(trainId, bookingRef, availableSeats);
 
                     var todod = "[TODOD]";
