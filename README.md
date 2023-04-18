@@ -1,5 +1,5 @@
 # kata-LegacyTrain (TrainTrain)
-Kata on how to refactor a typical legacy code base (directly inspired by [Emily Bache's kata](https://github.com/emilybache/KataTrainReservation).
+Kata on how to refactor a typical legacy code base (made by Thomas PIERRAIN & Bruno BOUCARD, directly inspired by [Emily Bache's kata](https://github.com/emilybache/KataTrainReservation) ).
 
 ## Contexte général
 SSII a gagné un appel d'offre pour mise en oeuvre rapide d'un logiciel de réservation de sièges dans les trains.
