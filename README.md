@@ -4,44 +4,39 @@ Kata on how to refactor a typical legacy code base (directly inspired by [Emily 
 Too many projects have layered-based...
 
 ## Contexte: 
-SSII a gagné un appel d'offre pour mise en oeuvre rapide d'un logiciel de réservation de sièges dans les trains.
-Après avoir développé une première verison de l'appli, la SSII a continuée a faire evoluer le système jusqu'à arriver à une situation de blocage: le client demande une modification de l'algoithme de reservation ce qui semble impossible à la SSII (qui plus est, à perdu entre-temps tous ses développeurs partis faire autre chose de plus intéressant).
-La SSII a jetée l'éponge en produisant un avenant/devis hors de prix pour le client qui nous sollicite pour "reprendre le dossier".
+SSII a gagnÃ© un appel d'offre pour mise en oeuvre rapide d'un logiciel de rÃ©servation de siÃ¨ges dans les trains.
+AprÃ¨s avoir dÃ©veloppÃ© une premiÃ¨re version de l'appli, la SSII a continuÃ©e a faire evoluer le systÃ¨me jusqu'Ã  arriver Ã  une situation de blocage: le client demande une modification de l'algoithme de reservation ce qui semble impossible Ã  la SSII (qui plus est, Ã  perdu entre-temps tous ses dÃ©veloppeurs partis faire autre chose de plus intÃ©ressant). La SSII a depuis jetÃ©e l'Ã©ponge en produisant un avenant/devis hors de prix pour le client qui nous sollicite pour "reprendre le dossier".
 
-Nous arrivons donc sur une code base assez moche, pour laquelle nous n'avons plus de développeurs pour nous expliquer leurs intentions initiales et justifier de leurs choix. Heureusement pour nous, le client mets à notre disposition un expert du domaine pendant 3 heures pour répondre à nos questions.
-
-On est assez inquiet par la difficulté potentielle, mais comme on est joeur on a accepté cette mission mais on compte sur vous pour nous aider.
-
-La nouvelle feature est de supporter une autre façon de reserver des places de trains pour un autre grand distributeur qui n'aime pas du tout notre format JSON de retour => on va donc lui exposer un nouveau entry point pour supporter son besoin.
-TrainTrainCorp se rends compte qu'avec l'arrivée de ce clients et les volumes énormes corrspondant attendus => mettre à jour l'algo de réservation en introduisant une nouvelle règle : "Dans l'idéal, ne pas charger les voitures du train à plus de 70% de leur capacité."
-
-Couplet sur le contexte organisationel : 
- - On a externalisé le TrainDataService pour des questions de scalabilité
- - On a externalisé le BookingReferenceService pour répondre à une contrainte réglementaire Européene (trouver un truc rigolo et absurde).
+Nous arrivons donc sur une code base assez moche, pour laquelle nous n'avons plus aucun dÃ©veloppeur pour nous expliquer leurs intentions initiales et justifier de leurs choix. 
 
 ## Description de l'architecture
-On a récupéré le diagramme suivant qui a l'air d'etre à jour et qu'on vous commente.
+On a rÃ©cupÃ©rÃ© le diagramme suivant qui a l'air d'etre Ã  jour et qu'on vous commente.
 
+<Montrer dessin.>
 
-Montrer dessin.
+Explication sur les 2 APIs de la HassanCehef qu'on est obligÃ© de consommer : 
+### L'API TrainDataService 
+- retourne le dÃ©tail et la composition des trains Ã  partir de leur identifiant de train
+- permet de booker/reserver un ensemble de siÃ¨ges sur un train en prÃ©cisant l'identifiant du train, les identifiants/noms des siÃ¨ges sollicitÃ©s et un booking reference valide rÃ©cupÃ©rÃ© auprÃ¨s de l'API __BookingReferenceService__
 
+### L'API BookingReferenceService
+- Permet de rÃ©cupÃ©rer un identifiant unique de rÃ©servation juste avant d'appeler le TrainDataService pour effectuer une reservation (on a externalisÃ© le BookingReferenceService pour rÃ©pondre Ã  une contrainte rÃ©glementaire EuropÃ©ene, mais certainÂ·eÂ·s disent que c'est plutÃ´t Ã  cause de la loi de Conway chez HassanCehef...)
 
-## Etapes
+---
 
-1. On rajoute des tests d'acceptance sur les uses cases intiaux (Pas plus de 70% du train et pas de reservation a cheval sur 2 voitures)
-	- Surprise : la deuxieme regle (non chevauchement) n'est pas implémentée... Discussion avec l'expert qui n'en croit pas ses yeux.
-	- On propose au client d'implémenter cette règle en même temps que la nouvelle feature (la règle sera valable quelque soit les modalités de réservation (historique et nouveau).
+## Contexte (avant de coder)
+On vient de rajouter 3 tests d'acceptation sur les rÃ¨gles mÃ©tiers Ã©voquÃ©es.
+Should:
+   - Reserve_seats_when_available()
+   - Not_reserve_seats_when_it_exceed_max_capacity_threshold() (on ne peut pas rÃ©server plus de 70% du train)
+   - Reserve_all_seats_in_the_same_coach() - __Stupeur: la rÃ¨gle du non chevauchement entre voiture pour une mÃªme rÃ©servation n'est pas implÃ©mentÃ©e !___
 
-2. On rajoute 1 test d'acceptance sur la nouvelle feature -> nouveau format de retour sur scenarii avec moins de 70% de charge par voiture
+Le client n'en croit pas ses yeux. Et on vient de proposer au client d'implÃ©menter correctement cette vieille rÃ¨gle en mÃªme temps que la nouvelle feature. Il est d'accord.
 
-3. On fait émerger le concept de Coach qui n'existait pas dans le code existant
-4. On sépare bien le code du domaine (plus du tout anémique) avec le code technique
-5. On extrait le format de sérialization du domaine métier en le situant dans des adapteurs à la périphérie du système (archi hexagonale FTW)
+## Objectifs
 
-En route : 
- - on se sera débarrassé le l'état des trains persistés/cachés dans le service TrainTrain (à tord, car d'autres gens peuvent modifier les reservations des trains via le TrainData service)
- - on se sera débarrassé de l'ORM
- 
+1. Fixer le test d'acceptation qui Ã©choue ("Should Reserve_all_seats_in_the_same_coach()")
+2. ImplÃ©menter la nouvelle feature ("*Dans l'idÃ©al, ne pas charger les voitures du train Ã  plus de 70% de leur capacitÃ©*" (car les 30% restants sont pour les salariÃ©s de la HassanCehef)
+3. Transformer l'API pour implÃ©menter une architecture hexagonale
 
- Suite à notre refactoring, on peut commencer à avoir des discussions intéressantes avec le métier sur un autre problème qui le taraude: la modification de la topologies des trains à postériori qui était problématique avant a cause du caching des trains du service TrainTrain.
-
+Note : il n'est pas interdit d'amÃ©liorer/refactorer le code en passant...
