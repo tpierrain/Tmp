@@ -8,11 +8,11 @@ Après avoir développé une première version de l'appli, la SSII a continuée 
 Nous arrivons donc sur une code base assez moche, pour laquelle nous n'avons plus aucun développeur pour nous expliquer leurs intentions initiales et justifier de leurs choix. 
 
 ## Description de l'architecture et des APIs exernes impliquées
-On a récupéré le diagramme suivant qui a l'air d'etre à jour et qu'on vous commente.
 
-Montrer dessin.
+Notre API TrainTrain permet de reserver des places dans les trains. Pour y arriver, notre jeune startup exploite 2 APIs de l'opérateur national et historique HassanCehef. 
 
-Explication sur les 2 APIs de la HassanCehef qu'on est obligé de consommer : 
+Ces 2 APIs de la HassanCehef sont :
+
 ### L'API TrainDataService 
 - retourne le détail et la composition des trains à partir de leur identifiant de train
 - permet de booker/reserver un ensemble de sièges sur un train en précisant l'identifiant du train, les identifiants/noms des sièges sollicités et un booking reference valide récupéré auprès de l'API __BookingReferenceService__
