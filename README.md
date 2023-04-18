@@ -9,7 +9,9 @@ Nous arrivons donc sur une code base assez moche, pour laquelle nous n'avons plu
 
 ## Description de l'architecture et des APIs exernes impliquées
 
-Notre API TrainTrain permet de reserver des places dans les trains. Pour y arriver, notre jeune startup exploite 2 APIs de l'opérateur national et historique HassanCehef. 
+     Notre API TrainTrain permet de reserver des places dans les trains
+
+Pour y arriver, notre jeune startup exploite 2 APIs de l'opérateur national et historique HassanCehef. 
 
 Ces 2 APIs de la HassanCehef sont :
 
