@@ -3,7 +3,7 @@ Kata on how to refactor a typical legacy code base (made by Thomas PIERRAIN & Br
 
 ## Contexte général
 SSII a gagné un appel d'offre pour mise en oeuvre rapide d'un logiciel de réservation de sièges dans les trains.
-Après avoir développé une première version de l'appli, la SSII a continuée a faire evoluer le système jusqu'à arriver à une situation de blocage: le client demande une modification de l'algoithme de reservation ce qui semble impossible à la SSII (qui plus est, à perdu entre-temps tous ses développeurs partis faire autre chose de plus intéressant). La SSII a depuis jetée l'éponge en produisant un avenant/devis hors de prix pour le client qui nous sollicite pour "reprendre le dossier".
+Après avoir développé une première version de l'appli, la SSII a depuis jetée l'éponge en produisant un avenant/devis hors de prix pour le client qui nous sollicite pour "reprendre le dossier (rajouter une nouvelle fonctionnalité).
 
 Nous arrivons donc sur une code base assez moche, pour laquelle nous n'avons plus aucun développeur pour nous expliquer leurs intentions initiales et justifier de leurs choix. 
 
@@ -30,7 +30,7 @@ On vient de rajouter 3 tests d'acceptation sur les règles métiers évoquées.
 Should:
    - Reserve_seats_when_available() - __OK__
    - Not_reserve_seats_when_it_exceed_max_capacity_threshold() (on ne peut pas réserver plus de 70% du train) - __OK__
-   - Reserve_all_seats_in_the_same_coach() - __KO! Stupeur: la règle du non chevauchement entre voiture pour une même réservation n'est pas implémentée !___
+   - Reserve_all_seats_in_the_same_coach() - __KO! Stupeur: la règle du non chevauchement entre voiture pour une même réservation n'est pas implémentée !__
 
 Le client n'en croit pas ses yeux. Et on vient de proposer au client d'implémenter correctement cette vieille règle en même temps que la nouvelle feature. Il est d'accord.
 
