@@ -1,43 +1,64 @@
 # kata-LegacyTrain (TrainTrain)
-Kata on how to refactor a typical legacy code base (made by Thomas PIERRAIN & Bruno BOUCARD, directly inspired by [Emily Bache's kata](https://github.com/emilybache/KataTrainReservation) ).
+*Le kata TrainTrain est un kata écrit par Thomas PIERRAIN et Bruno BOUCARD suite à une inspiration du kata d’Emily BACHE ([Train reservation](https://github.com/emilybache/KataTrainReservation) )
+*(Sauf que dans TrainTrain, on a écrit plus de code, pour rendre plus savoureux le côté Legacy)*
 
-## Contexte général
-SSII a gagné un appel d'offre pour mise en oeuvre rapide d'un logiciel de réservation de sièges dans les trains.
-Après avoir développé une première version de l'appli, la SSII a depuis jetée l'éponge en produisant un avenant/devis hors de prix pour le client qui nous sollicite pour "reprendre le dossier (rajouter une nouvelle fonctionnalité).
+# Contexte
 
-Nous arrivons donc sur une code base assez moche, pour laquelle nous n'avons plus aucun développeur pour nous expliquer leurs intentions initiales et justifier de leurs choix. 
+Nous sommes une petite équipe de dev et nous arrivons sur une code-base assez moche -mais qui est en prod- et pour laquelle nous n'avons plus aucun dev pour nous expliquer leurs intentions initiales et justifier de leurs choix. On va devoir se débrouiller seuls pour rajouter une fonctionnalité manquante.
 
-## Description de l'architecture et des APIs exernes impliquées
+Le système s’appelle TrainTrain, et 
 
-     Notre API TrainTrain permet de reserver des places dans les trains
+ `Notre API TrainTrain permet de reserver des places dans les trains`
 
-Pour y arriver, notre jeune startup exploite 2 APIs de l'opérateur national et historique HassanCehef. 
+Pour faire son travail, celle-ci attends un identifiant de train (qui correspond dans les faits à un voyage) et un nombre de places souhaitées. Elle retournera un JSON qui contient les noms des sièges réservés ainsi qu’un identifiant de réservation/booking qui est unique.
+
+# Les règles métiers
+
+Notre API est censée implémenter quelques règles métiers :
+
+1. On ne peux réserver que des sièges qui ne sont pas déjà réservés
+2. On ne doit pas remplir les trains à plus de 70% de leur capacité totale (on doit en effet laisser les 30% restants aux salariés de HassanCehef, l’opérateur officiel et historique, car eux aussi on leur propre système de réservation de billets de train)
+3. On ne doit pas séparer les couples et les familles en les plaçant dans des voitures (coaches) différentes
+4. **La règles métier qui manque et qu’il va falloir ajouter est la suivante :** On ne doit pas remplir chaque voiture/coach à plus de 70% de leur capacité (pour permettre aux clients directs de l’opérateur officiel et historique de pouvoir réserver ces 30% restants)
+
+# Les tierces parties utilisées
+
+Pour faire sont travail, notre jeune startup exploite 2 APIs de l'opérateur national et historique HassanCehef.
 
 Ces 2 APIs de la HassanCehef sont :
 
-### L'API TrainDataService 
-- retourne le détail et la composition des trains à partir de leur identifiant de train
-- permet de booker/reserver un ensemble de sièges sur un train en précisant l'identifiant du train, les identifiants/noms des sièges sollicités et un booking reference valide récupéré auprès de l'API __BookingReferenceService__
+### L'API TrainDataService
+
+- **retourne le détail et la composition des trains à partir de leur identifiant de train**
+- **permet de booker/reserver un ensemble de sièges sur un train** en
+précisant l'identifiant du train, les identifiants/noms des sièges
+sollicités et un booking reference valide récupéré auprès de l'API **BookingReferenceService**
 
 ### L'API BookingReferenceService
-- Permet de récupérer un identifiant unique de réservation juste avant d'appeler le TrainDataService pour effectuer une reservation (on a externalisé le BookingReferenceService pour répondre à une contrainte réglementaire Européene, mais certain·e·s disent que c'est plutôt à cause de la loi de Conway chez HassanCehef...)
+
+- Permet de **récupérer un identifiant unique de réservation juste avant** d'appeler le TrainDataService pour effectuer une reservation (on a
+externalisé le BookingReferenceService pour répondre à une contrainte
+réglementaire Européene, mais certain·e·s disent que c'est plutôt à
+cause de la loi de Conway chez HassanCehef...)
+
+# Objectifs
+
+On nous a demandé de rajouter une nouvelle fonctionnalité (la règle métier #4: “*On ne doit pas remplir chaque voiture/coach à plus de 70% de leur capacité”*) 
+
+mais…
+
+En rajoutant quelques tests d’acceptation sur la route, on s’est rendu-compte que la règle #3: “*On ne doit pas séparer les couples et les familles en les plaçant dans des voitures (coaches) différentes”*
+
+n’était tout simplement pas implémentée… 
+
+C'est là où on en est dans la code base. 
 
 ---
 
-## Instructions
+On te propose donc nous faire une proposition. Par quoi commencerais-tu ? :
 
-On vient de rajouter 3 tests d'acceptation sur les règles métiers évoquées.
-Should:
-   - Reserve_seats_when_available() - __OK__
-   - Not_reserve_seats_when_it_exceed_max_capacity_threshold() (on ne peut pas réserver plus de 70% du train) - __OK__
-   - Reserve_all_seats_in_the_same_coach() - __KO! Stupeur: la règle du non chevauchement entre voiture pour une même réservation n'est pas implémentée !__
+- implémenter la fonctionnalité (#3) qu’on est censé avoir et qui ne fonctionne visiblement pas ? (i.e.: de ne pas séparer les familles)
+- implémenter la nouvelle fonctionnalité qu’on nous a demandé de rajouter (#4)
+- autre chose ?
 
-Le client n'en croit pas ses yeux. Et on vient de proposer au client d'implémenter correctement cette vieille règle en même temps que la nouvelle feature. Il est d'accord.
-
-## Objectifs
-
-1. Fixer le test d'acceptation qui échoue ("Should Reserve_all_seats_in_the_same_coach()")
-2. Implémenter la nouvelle feature ("*Dans l'idéal, ne pas charger les voitures du train à plus de 70% de leur capacité*" (car les 30% restants sont pour les salariés de la HassanCehef)
-3. Transformer l'API pour implémenter une architecture hexagonale
-
-Note : il n'est pas interdit d'améliorer/refactorer le code en passant...
+Letsgo!
