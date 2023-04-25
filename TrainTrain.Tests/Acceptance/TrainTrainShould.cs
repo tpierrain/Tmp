@@ -7,7 +7,7 @@ namespace TrainTrain.Tests.Acceptance
     public class TrainTrainShould
     {
         [Test]
-        public async Task Reserve_seats_when_train_is_empty()
+        public async Task Reserve_seats_when_they_are_not_already_reserved()
         {
             var fuzzer = new Fuzzer();
             var (trainId, bookingReference) = FuzzTrainIdAndBookingReference(fuzzer);
@@ -24,7 +24,7 @@ namespace TrainTrain.Tests.Acceptance
         }
 
         [Test]
-        public async Task Not_reserve_seats_when_it_exceed_max_capacity_threshold()
+        public async Task Not_reserve_seats_when_it_exceed_max_capacity_threshold_of_70_percents()
         {
             var fuzzer = new Fuzzer();
             var (trainId, bookingReference) = FuzzTrainIdAndBookingReference(fuzzer);
