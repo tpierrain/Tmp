@@ -1,5 +1,5 @@
 # kata-LegacyTrain (TrainTrain)
-*Le kata TrainTrain est un kata écrit par Thomas PIERRAIN et Bruno BOUCARD suite à une inspiration du kata d’Emily BACHE ([Train reservation](https://github.com/emilybache/KataTrainReservation) )
+*Le kata TrainTrain est un kata écrit par Thomas PIERRAIN et Bruno BOUCARD suite à une inspiration du kata d’Emily BACHE ([Train reservation](https://github.com/emilybache/KataTrainReservation) )*
 *(Sauf que dans TrainTrain, on a écrit plus de code, pour rendre plus savoureux le côté Legacy)*
 
 # Contexte
