@@ -1,14 +1,13 @@
 ﻿using Diverse;
 
-namespace TrainTrain.Tests
+namespace TrainTrain.Tests;
+
+[SetUpFixture]
+public class AllTestFixtures
 {
-    [SetUpFixture]
-    public class AllTestFixtures
+    [OneTimeSetUp]
+    public void Init()
     {
-        [OneTimeSetUp]
-        public void Init()
-        {
-            Fuzzer.Log = TestContext.WriteLine;
-        }
+        Fuzzer.Log = TestContext.WriteLine;
     }
 }

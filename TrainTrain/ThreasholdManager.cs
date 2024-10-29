@@ -1,12 +1,9 @@
-using System;
+namespace TrainTrain;
 
-namespace TrainTrain
+public static class ThreasholdManager
 {
-    public static class ThreasholdManager
+    public static double GetMaxRes()
     {
-        public static double GetMaxRes()
-        {
-            return 0.70;
-        }
+        return 0.70;
     }
 }

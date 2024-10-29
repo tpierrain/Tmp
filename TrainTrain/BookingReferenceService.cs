@@ -1,43 +1,39 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
+﻿using System.Net.Http.Headers;
 
-namespace TrainTrain
+namespace TrainTrain;
+
+public class BookingReferenceService : IBookingReferenceService
 {
-    public class BookingReferenceService : IBookingReferenceService
+    private readonly string _uriBookingReferenceService;
+
+    public BookingReferenceService(string uriBookingReferenceService)
     {
-        private readonly string _uriBookingReferenceService;
+        _uriBookingReferenceService = uriBookingReferenceService;
+    }
 
-        public BookingReferenceService(string uriBookingReferenceService)
+    public async Task<string> GetBookingReference()
+    {
+        string bookingRef;
+        using (var client = new HttpClient())
         {
-            _uriBookingReferenceService = uriBookingReferenceService;
+            bookingRef = await GetBookRef(client);
         }
 
-        public async Task<string> GetBookingReference()
-        {
-            string bookingRef;
-            using (var client = new HttpClient())
-            {
-                bookingRef = await GetBookRef(client);
-            }
+        return bookingRef;
+    }
 
-            return bookingRef;
-        }
+    public async Task<string> GetBookRef(HttpClient client)
+    {
+        var value = new MediaTypeWithQualityHeaderValue("application/json");
+        client.BaseAddress = new Uri(_uriBookingReferenceService);
+        client.DefaultRequestHeaders.Accept.Clear();
+        client.DefaultRequestHeaders.Accept.Add(value);
 
-        public async Task<string> GetBookRef(HttpClient client)
-        {
-            var value = new MediaTypeWithQualityHeaderValue("application/json");
-            client.BaseAddress = new Uri(_uriBookingReferenceService);
-            client.DefaultRequestHeaders.Accept.Clear();
-            client.DefaultRequestHeaders.Accept.Add(value);
+        // HTTP GET
+        var response = await client.GetAsync("/booking_reference");
+        response.EnsureSuccessStatusCode();
 
-            // HTTP GET
-            var response = await client.GetAsync("/booking_reference");
-            response.EnsureSuccessStatusCode();
-
-            var bookingRef = await response.Content.ReadAsStringAsync();
-            return bookingRef;
-        }
+        var bookingRef = await response.Content.ReadAsStringAsync();
+        return bookingRef;
     }
 }
