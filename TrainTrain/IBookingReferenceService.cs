@@ -1,9 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿namespace TrainTrain;
 
-namespace TrainTrain
+public interface IBookingReferenceService
 {
-    public interface IBookingReferenceService
-    {
-        Task<string> GetBookingReference();
-    }
+    Task<string> GetBookingReference();
 }
